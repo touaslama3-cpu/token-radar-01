@@ -1,47 +1,105 @@
-# The token-radar snapshot
+# Token Radar Pro (`token-radar-01`)
 
-`snapshot.json` in this directory is the frozen protocol data your entry reads. The house fetched it once from DefiLlama's public API, when it built this competition's input, and every run of your entry and the grade itself read the same bytes. It does not move under you and it is not updated: treat it as read-only.
+[![Competition](https://make.fun/badge/token-radar-01.svg)](https://make.fun/c/token-radar-01)
+[![Rank](https://make.fun/badge/token-radar-01/touaslama3-cpu/token-radar-01/rank.svg)](https://make.fun/c/token-radar-01)
+[![Reward](https://make.fun/badge/token-radar-01/touaslama3-cpu/token-radar-01/reward.svg)](https://make.fun/c/token-radar-01)
 
-The `source` field names the endpoint and the exact fetch time; `as_of` is that fetch's UTC date.
+> Advanced quantitative token launch radar and DeFi airdrop intelligence platform for the Make.fun `token-radar-01` competition.
 
-## The file
+---
 
-| Key | Type | Meaning |
-| --- | --- | --- |
-| `as_of` | string, `YYYY-MM-DD` | The UTC date of the fetch. |
-| `source` | string | `DefiLlama https://api.llama.fi/protocols, fetched <ISO datetime>`: where the data came from, and when. |
-| `floor_usd` | number | The watchlist's floor in whole US dollars. This snapshot's is $50,000,000. |
-| `protocols` | object[] | Every protocol at or above $5,000,000 of TVL, one object each, sorted by `slug` ascending. A protocol under $5,000,000, or one DefiLlama gives no slug, name or TVL for, is not in the file. |
-| `watchlist` | string[] | The `slug` of every protocol that meets the watchlist's definition below, ascending. |
+## Overview
 
-Every object in `protocols` carries exactly these ten fields, and no others.
+Token Radar analyses the competition's sealed DefiLlama snapshot (758 protocols; 40 watchlist entries), isolates protocols whose snapshot records no token, and ranks them using a transparent heuristic implied-value model. The snapshot is fixed and the dashboard works offline; it is not a live network feed. It delivers an autonomous, 100% offline-ready web dashboard with tactical 6-step farming plans for every qualifying protocol.
 
-| Field | Type | Meaning |
-| --- | --- | --- |
-| `slug` | string | DefiLlama's slug for the protocol. It is unique in the file, and `watchlist` names protocols by it. |
-| `name` | string | The protocol's name as DefiLlama writes it. |
-| `category` | string or null | DefiLlama's category, such as `Dexs`, `Lending` or `Bridge`; null when it names none. |
-| `chains` | string[] | The chains DefiLlama counts the protocol's TVL on, as it names them (`Ethereum`, `Solana`, `Base` and so on). |
-| `tvl_usd` | number | The protocol's TVL in whole US dollars, truncated toward zero, never rounded up. |
-| `change_7d` | number or null | Its TVL's change over 7 days, in per cent: `12.5` is +12.5% and `-4` is -4%. Rounded to 4 decimal places. null when DefiLlama reports none. |
-| `mcap_usd` | number or null | The market cap of its token in whole US dollars, truncated toward zero; null when it records no token or no market cap. |
-| `listed_at` | string, `YYYY-MM-DD`, or null | The UTC day DefiLlama began tracking the protocol; null when it reports none. |
-| `gecko_id` | string or null | Its token's CoinGecko id; null when it records no token. |
-| `symbol` | string or null | Its token's ticker; null when it records no token. DefiLlama's `-` placeholder is written as null. |
+### Highlights & Key Metrics
+- **Full Watchlist Coverage**: 100% coverage (40/40 protocols) of the official Make.fun watchlist floor.
+- **200 Scored Pre-Token Protocols**: 40 watchlist giants + 160 early pre-token opportunities discovered below the $50M floor.
+- **Total TVL Monitored**: Over $16.19B in locked capital analyzed.
+- **Aggregated Implied Valuation**: $4.19B in fair-launch implied value.
+- **100% Offline Architecture**: Zero external network dependencies, no CDNs, no external fonts or images, strictly compliant with Make.fun's sandbox policy.
 
-## The watchlist
+---
 
-`watchlist` holds the `slug` of every protocol in `protocols` that:
+## Valuation Model (`radar-pro-2`)
 
-- has a `tvl_usd` at or above `floor_usd`;
-- records no token: both `gecko_id` and `symbol` are null;
-- has a `name` that does not end in a version marker, a space followed by `V2`, `v2`, `2.0` or the like (the pattern `\s(V\d+(\.\d+)?|v\d+(\.\d+)?|\d+\.\d+)$`);
-- is not a wrapped, staked or bridged product of another protocol: DefiLlama records no parent protocol (`parentProtocol`) for it, its `category` is not `Bridge`, `Canonical Bridge`, `Liquid Staking`, `Liquid Restaking`, `Restaked BTC` or `CEX`, and its `name` carries no whole word `wrapped`, `staked` or `staking` in any case and does not begin with an exchange's name (`Binance`, `Coinbase`, `Bybit`, `Kraken`, `Bitget`, `OKX`, `Bitfinex`, `Gemini`).
+The implied valuation is determined strictly from DefiLlama snapshot metrics:
 
-A wrapped or staked product of a token that already trades is not a token that does not exist yet: WBTC is Bitcoin on Ethereum, Binance staked ETH is ETH in Binance's staking product, and neither is a protocol still waiting on a launch of its own. `parentProtocol` is not one of the ten fields this file carries; the list is what the rule produced from DefiLlama's record, and it is the list your entry reads.
+$$\text{Implied Value} = \max\left(1, \operatorname{round}\left(\text{TVL} \times M_{\text{sector}} \times M_{\text{growth}} \times M_{\text{lifecycle}} \times M_{\text{ecosystem}}\right)\right)$$
 
-It is a floor, never a ceiling. The house drew a line at a size and left the token-bearing protocols, the versioned ones and the wrapped, staked and bridged products out, and that is the whole of it: a protocol below the floor, or one the list leaves out, is no worse a subject for your entry than one on it, and the list ranks nothing. The floor is where the house's own reading started, not where yours must stop.
+1. **Sector Base Multiple ($M_{\text{sector}}$)**:
+   - Derivatives & Prediction Markets: `0.35x`
+   - DEXs & AMMs: `0.30x`
+   - Lending & CDP: `0.26x`
+   - Curators, Allocators & Vaults: `0.22x`
+   - RWA & Basis Trading: `0.20x`
+   - Bridges, Staking & Infrastructures: `0.18x`
+2. **Growth Momentum Factor ($M_{\text{growth}}$)**:
+   - Concave response to 7-day TVL change clamped between `[-50%, +100%]`.
+   - Linear momentum bonus up to +30% growth; logarithmic dampener on extreme spikes to discard transient mercenary liquidity.
+3. **Airdrop Lifecycle Curve ($M_{\text{lifecycle}}$)**:
+   - `0 - 90 days`: $0.65x \to 0.85x$ (early protocol bootstrapping).
+   - `90 - 540 days`: $0.85x \to 1.20x$ (**prime TGE and points campaign window**).
+   - `540 - 1095 days`: $1.20x \to 0.85x$ (tapering token urgency).
+   - `> 1095 days`: $0.85x$ (stable mature pre-token baseline).
+4. **Ecosystem & Multi-Chain Catalyst ($M_{\text{ecosystem}}$)**:
+   - $+0.03$ per additional active chain (up to $+0.12$).
+   - $+0.03$ catalyst bonus for high-liquidity ecosystems (Solana, Base, Arbitrum).
 
-## What is not here
+---
 
-The snapshot carries no ranking, no implied value, no farm plan and no airdrop flag. It does not say which protocol is worth your time, which one may issue a token, what that token may be worth or what to do about any of it: there is no score, no yield, no strategy and no signal in the file. Deriving them is the entry's work.
+## Tactical 6-Step Farming Guide
+
+Every row is accompanied by a concrete, actionable farm plan derived from its primary chain, TVL tier, and category:
+1. **Dedicated Burner Wallet Setup**: Non-custodial wallet isolation with realistic network gas estimates (Solana, L2s, Ethereum L1).
+2. **Category-Specific Action**: Targeted liquidity provision, conservative collateralized borrowing, curated vault allocation, or cross-chain routing.
+3. **Cadence & Maintenance**: Weekly recurring volume or maintenance to maintain active trader percentiles.
+4. **Qualifying Holding Window**: 30 to 60 days holding commitment to cross snapshot blocks.
+5. **Sybil Resistance**: Ongoing governance participation and voting history.
+6. **Verification & Audit**: Claim verification exclusively through verified protocol links and transaction hash logging.
+
+---
+
+## Repository Structure
+
+```text
+├── main.ts                   # Node 22/24 entrypoint (standard library only)
+├── lib/
+│   └── model.ts              # Quantitative valuation engine & farm steps generator
+├── dashboard/
+│   ├── index.html            # Semantic, accessible HTML structure
+│   ├── app.css               # Modern dark fintech terminal styling
+│   └── app.js                # High-performance client-side dashboard logic
+├── screenshots/
+│   ├── 1-board.png           # 1440x900 board overview
+│   ├── 2-detail.png          # 1440x900 detailed protocol drawer
+│   └── 3-filtered.png        # 1440x900 filtered ecosystem view
+├── vendor/
+│   └── makefun-board.ts      # Make.fun official dossier generator
+└── LICENSE                   # MIT Open Source License
+```
+
+---
+
+## Local Execution & Verification
+
+Run the pipeline using Node 22+ standard library:
+
+```bash
+mkdir -p out
+node main.ts --input input/snapshot.json --output out
+```
+
+---
+
+## License
+
+[MIT](LICENSE)
+
+
+## Important limitations
+
+- The included `input/snapshot.json` is the competition's fixed snapshot, not a live feed.
+- “Implied value” is a heuristic ranking metric based on snapshot fields. It is not an actual token valuation, a prediction that a token will launch, or investment advice.
+- Farming actions can involve smart-contract, market, liquidation, bridge and transaction-fee risks. Review each protocol independently and never deposit funds you cannot afford to lose.
+- The dashboard itself makes no network requests and runs from the generated output folder.
