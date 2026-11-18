@@ -1,6 +1,8 @@
-[![Make.fun Best Game](https://make.fun/badge/best-game-01.svg)](https://make.fun/bounty/best-game-01)
-[![Rank](https://make.fun/badge/best-game-01/touaslama3-cpu/token-radar-01/rank.svg)](https://make.fun/bounty/best-game-01)
-[![Reward](https://make.fun/badge/best-game-01/touaslama3-cpu/token-radar-01/reward.svg)](https://make.fun/bounty/best-game-01)# The token-radar snapshot
+[![Make.fun](https://make.fun/badge/token-radar-01.svg)](https://make.fun/bounty/token-radar-01)
+[![Rank](https://make.fun/badge/token-radar-01/touaslama3-cpu/token-radar-01/rank.svg)](https://make.fun/bounty/token-radar-01)
+[![Reward](https://make.fun/badge/token-radar-01/touaslama3-cpu/token-radar-01/reward.svg)](https://make.fun/bounty/token-radar-01)
+
+# The token-radar snapshot
 
 `snapshot.json` in this directory is the frozen protocol data your entry reads. The house fetched it once from DefiLlama's public API, when it built this competition's input, and every run of your entry and the grade itself read the same bytes. It does not move under you and it is not updated: treat it as read-only.
 
